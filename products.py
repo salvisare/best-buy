@@ -14,11 +14,11 @@ class Product:
         self.active = True
 
     # Get quantity
-    def get_quantity(self) -> float:
+    def get_quantity(self):
         return float(self.quantity)
 
     # Is active
-    def is_active(self) -> bool:
+    def is_active(self):
         return self.active
 
     # Set quantity with if active
@@ -40,7 +40,7 @@ class Product:
             self.active = False
 
     # Buys a given quantity of the product
-    def buy(self, quantity) -> float:
+    def buy(self, quantity):
         if quantity <= 0:
             raise ValueError("Purchase quantity must be greater than 0")
         if quantity > self.quantity:
@@ -54,7 +54,7 @@ class Product:
         return total_price
 
     # Buy a given quantity
-    def buy(self, quantity) -> float:
+    def buy(self, quantity):
         if quantity <= 0:
             raise ValueError("Purchase quantity must be greater than 0")
         if quantity > self.quantity:
@@ -67,7 +67,7 @@ class Product:
 
         return total_price
 
-    def show(self) -> str:
+    def show(self):
         status = "Active" if self.is_active() else "Inactive"
         print(f"Product details: {self.name}, {self.price}, {self.quantity}, {status}")
 
