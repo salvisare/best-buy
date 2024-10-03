@@ -39,19 +39,6 @@ class Product:
     def deactivate(self):
             self.active = False
 
-    # Buys a given quantity of the product
-    def buy(self, quantity):
-        if quantity <= 0:
-            raise ValueError("Purchase quantity must be greater than 0")
-        if quantity > self.quantity:
-            raise ValueError("Not enough quantity available")
-
-        total_price = quantity * self.price
-
-        # Update the quantity after purchase
-        self.set_quantity(self.quantity - quantity)
-
-        return total_price
 
     # Buy a given quantity
     def buy(self, quantity):

@@ -1,10 +1,9 @@
 from products import Product
-from typing import List, Tuple
 
 class Store:
     #products = []
 
-    def __init__(self, products: List[Product]):
+    def __init__(self, products):
         self.products = products
 
     def add_product(self, product):
@@ -21,7 +20,7 @@ class Store:
     def get_all_products(self):
         return [product for product in self.products if product.is_active()]
 
-    def order(self, shopping_list: List[Tuple[Product, int]]) -> float:
+    def order(self, shopping_list):
         """
         Processes a list of product and quantity pairs, purchases the items,
         and returns the total price of the order.
@@ -45,6 +44,7 @@ def main():
     store = Store(product_list)
     products = store.get_all_products()
     print(store.get_total_quantity())
+    print("-")
     print(store.order([(products[0], 1), (products[1], 2)]))
 
 
