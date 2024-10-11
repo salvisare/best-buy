@@ -1,5 +1,5 @@
 from store import Store
-from products import Product
+from products import Product, NonStockedProduct, LimitedProduct
 import sys
 
 
@@ -30,8 +30,13 @@ def list_all_products(shop):
     if not active_products:
         print("No current active products available")
     else:
-        for listing in active_products:
-            listing.show()
+        for product in active_products:
+            if isinstance(product, NonStockedProduct):
+                print(product.__str__())  # Use __str__ for NonStockedProduct
+            elif isinstance(product, LimitedProduct):
+                print(product.show())  # Call show for LimitedProduct
+            else:
+                print(product.show())  # Call show for other products
 
 
 def get_total_quantity(shop):
@@ -84,10 +89,18 @@ def quit_program():
     sys.exit()  # Exit the program
 
 
-# setup initial stock of inventory
-product_list = [Product("MacBook Air M2", price=1450, quantity=100),
-                Product("Bose QuietComfort Earbuds", price=250, quantity=500),
-                Product("Google Pixel 7", price=500, quantity=250)
-                ]
-best_buy = Store(product_list)
-start(best_buy)
+if __name__ == "__main__":
+    # Create your product list
+    product_list = [
+        Product("MacBook Air M2", price=1450, quantity=100),
+        Product("Bose QuietComfort Earbuds", price=250, quantity=500),
+        Product("Google Pixel 7", price=500, quantity=250),
+        NonStockedProduct("Windows License", price=125),
+        LimitedProduct("Shipping", price=10, max_purchase=500)
+    ]
+
+    # Create the Store instance
+    best_buy = Store(product_list)
+
+    # Start the interaction
+    start(best_buy)

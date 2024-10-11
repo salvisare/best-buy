@@ -59,18 +59,34 @@ class Product:
 
     def show(self):
         status = "Active" if self.is_active() else "Inactive"
-        print(f"Product details: {self.name}, {self.price}, {self.quantity}, {status}")
+        return f"Product details: {self.name}, {self.price:.2f}, {self.quantity}, {status}"
 
 
-bose = Product("Bose QuietComfort Earbuds", price=250, quantity=500)
-mac = Product("MacBook Air M2", price=1450, quantity=100)
+class NonStockedProduct(Product):
+    def __init__(self, name, price):
+        super().__init__(name, price, 0)
 
-print(bose.buy(50))
-print(mac.buy(100))
-print(mac.is_active())
+    def buy(self, quantity):
+        raise ValueError("Cannot purchase non-stocked products.")
 
-bose.show()
-mac.show()
+    def __str__(self):
+        return f"{self.name} (Non-stocked product): ${self.price:.2f} (License, no quantity available)"
 
-bose.set_quantity(1000)
-bose.show()
+class LimitedProduct(Product):
+    def __init__(self, name, price, max_purchase):
+        super().__init__(name, price, max_purchase)  # Initialize with max purchase as quantity
+        self.max_purchase = max_purchase  # Set maximum purchase limit
+
+    def buy(self, quantity):
+        if quantity <= 0:
+            raise ValueError("Purchase quantity must be greater than 0")
+        if quantity > self.max_purchase:
+            raise ValueError(f"Cannot purchase more than {self.max_purchase} of this product.")
+
+        # Call the parent method to update quantity
+        return super().buy(quantity)
+
+
+    def show(self):
+        status = "Active" if self.is_active() else "Inactive"
+        return f"{self.name} (Limited product): ${self.price:.2f}, Max purchase: {self.max_purchase}"
