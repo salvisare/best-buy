@@ -64,7 +64,7 @@ class Product:
         if self.quantity == 0:
             self.active = False
 
-        return total_price  # Return the total price of the order
+        return self.quantity  # Return the remaining quantity
 
     def show(self):
         status = "Active" if self.is_active() else "Inactive"
