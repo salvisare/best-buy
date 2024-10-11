@@ -1,7 +1,9 @@
 from store import Store
 from products import Product, NonStockedProduct, LimitedProduct
+from promotion import Promotion, ThirdOneFree, SecondHalfPrice, PercentDiscount
 import sys
-
+import random
+import string
 
 def start(shop):
     while True:
@@ -32,7 +34,7 @@ def list_all_products(shop):
     else:
         for product in active_products:
             if isinstance(product, NonStockedProduct):
-                print(product.__str__())  # Use __str__ for NonStockedProduct
+                print(product)  # __str__ method will be used automatically
             elif isinstance(product, LimitedProduct):
                 print(product.show())  # Call show for LimitedProduct
             else:
@@ -83,6 +85,12 @@ def make_an_order(shop):
         print("No items selected for the order.")
 
 
+def generate_promotion_code(length=8):
+    """Generate a random promotion code."""
+    letters_and_digits = string.ascii_uppercase + string.digits
+    return ''.join(random.choice(letters_and_digits) for _ in range(length))
+
+
 def quit_program():
     """Quit the program."""
     print("Thank you for visiting the store. Goodbye!")
@@ -90,14 +98,43 @@ def quit_program():
 
 
 if __name__ == "__main__":
-    # Create your product list
-    product_list = [
-        Product("MacBook Air M2", price=1450, quantity=100),
-        Product("Bose QuietComfort Earbuds", price=250, quantity=500),
-        Product("Google Pixel 7", price=500, quantity=250),
-        NonStockedProduct("Windows License", price=125),
-        LimitedProduct("Shipping", price=10, max_purchase=500)
-    ]
+    # setup initial stock of inventory
+    product_list = [Product("MacBook Air M2", price=1450, quantity=100),
+                    Product("Bose QuietComfort Earbuds", price=250, quantity=500),
+                    Product("Google Pixel 7", price=500, quantity=250),
+                    NonStockedProduct("Windows License", price=125),
+                    LimitedProduct("Shipping", price=10, max_purchase=500)
+                    ]
+
+    # Create promotion catalog
+    second_half_price = SecondHalfPrice("Second Half price!")
+    third_one_free = ThirdOneFree("Third One Free!")
+    thirty_percent = PercentDiscount("30% off!", percent=30)
+
+    # Generate unique promotion codes
+    promotion_catalog = {
+        'Second Half Price': {
+            'instance': second_half_price,
+            'code': generate_promotion_code()
+        },
+        'Third One Free': {
+            'instance': third_one_free,
+            'code': generate_promotion_code()
+        },
+        '30% Off': {
+            'instance': thirty_percent,
+            'code': generate_promotion_code()
+        }
+    }
+
+    # Display promotion catalog with codes
+    for promo_name, promo_info in promotion_catalog.items():
+        print(f"{promo_name}: {promo_info['code']} - {promo_info['instance']}")
+
+    # Add promotions to products
+    product_list[0].set_promotion(second_half_price)
+    product_list[1].set_promotion(third_one_free)
+    product_list[3].set_promotion(thirty_percent)
 
     # Create the Store instance
     best_buy = Store(product_list)

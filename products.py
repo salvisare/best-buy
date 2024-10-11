@@ -1,3 +1,4 @@
+# products.py
 class Product:
     def __init__(self, name, price, quantity):
         if not name:
@@ -11,6 +12,7 @@ class Product:
         self.price = float(price)
         self.quantity = quantity
         self.active = True
+        self.promotion = None  # Initialize the promotion attribute
 
     # Get quantity
     def get_quantity(self):
@@ -24,11 +26,15 @@ class Product:
     def set_quantity(self, quantity):
         if quantity < 0:
             raise ValueError("Quantity cannot be negative")
-
         self.quantity = quantity
-
         if self.quantity == 0:
             self.active = False
+
+    def get_promotion(self):
+        return self.promotion  # Return the actual promotion instance
+
+    def set_promotion(self, promotion):
+        self.promotion = promotion  # Set the promotion correctly
 
     # Activate the product
     def activate(self):
@@ -36,30 +42,34 @@ class Product:
 
     # Deactivate the product
     def deactivate(self):
-            self.active = False
-
+        self.active = False
 
     # Buy a given quantity
     def buy(self, quantity):
         if quantity <= 0:
             raise ValueError("Purchase quantity must be greater than 0")
         if quantity > self.quantity:
-            raise ValueError("Cannot purchase more than available quantity.")  # Ensure this message matches the test
+            raise ValueError("Cannot purchase more than available quantity.")
 
-        total_price = quantity * self.price
+        # Calculate the total price considering the promotion
+        if self.promotion:
+            total_price = self.promotion.apply(self.price, quantity)
+        else:
+            total_price = self.price * quantity
 
         # Update the quantity after purchase
-        self.quantity -= quantity  # Update quantity directly
+        self.quantity -= quantity
 
         # Check if the product is now inactive
         if self.quantity == 0:
-            self.active = False  # Product becomes inactive when quantity reaches 0
+            self.active = False
 
-        return self.quantity  # Return the remaining quantity
+        return total_price  # Return the total price of the order
 
     def show(self):
         status = "Active" if self.is_active() else "Inactive"
-        return f"Product details: {self.name}, {self.price:.2f}, {self.quantity}, {status}"
+        promotion_str = f" ({self.get_promotion().description})" if self.get_promotion() else " (No promotion)"
+        return f"Product details: {self.name}, Price: ${self.price:.2f}, Quantity: {self.quantity}, Status: {status}{promotion_str}"
 
 
 class NonStockedProduct(Product):

@@ -1,4 +1,4 @@
-from products import Product
+
 
 class Store:
 
@@ -29,7 +29,7 @@ class Store:
         total_price = 0
         for product, quantity in shopping_list:
             if product.is_active() and product.get_quantity() >= quantity:
-                total_price += product.buy(quantity)
+                total_price += product.buy(quantity)  # Apply promotion and get total price
             else:
                 raise Exception(f"Cannot complete the purchase for {product.name}, insufficient quantity or inactive.")
         return total_price
@@ -39,5 +39,6 @@ class Store:
         print("Available Products:")
         for product in self.products:
             print(product.show())  # Call the show method to display product details
+
 
 
